@@ -20,3 +20,12 @@ A powerful, AI-powered dependency security and management agent that automatical
 - **Security Tools**: Semgrep, CVE databases
 - **Notifications**: Slack, Email
 - **Reporting**: CSV, JSON, Google Sheets integration
+
+## 🛠️ Comprehensive Tool List: Documents all Portia AI tools and integrations including:
+
+- Semgrep for security scanning
+- Bright Data for CVE intelligence
+- GitHub API for automation
+- Slack/Teams for notifications
+- Google Sheets/Notion for reporting
+- Support for 8+ package managers
