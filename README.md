@@ -1,6 +1,6 @@
 # Dependency Security Agent
 
-A powerful, AI-powered dependency security and management agent that automatically scans, analyzes, and manages dependencies across multiple repositories. Built with **Google Gemini AI** for intelligent analysis and decision-making.
+A powerful, AI-powered dependency security and management agent that automatically scans, analyzes, and manages dependencies across multiple repositories. Built with **Google Gemini AI** and **Portia-ai sdk** for intelligent analysis and decision-making.
 
 ## 🚀 Features
 
