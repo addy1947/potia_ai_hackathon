@@ -1,0 +1,90 @@
+# Dependency Security Agent Configuration
+agent:
+  name: "Dependency Security Agent"
+  version: "1.0.0"
+  description: "Automated dependency security and management"
+
+# Policy Configuration
+policies:
+  # Version update policies
+  version_updates:
+    allow_major_versions: false  # Block major version jumps by default
+    allow_minor_versions: true   # Allow minor version updates
+    allow_patch_versions: true   # Allow patch updates
+    
+  # License compliance
+  allowed_licenses:
+    - "MIT"
+    - "Apache-2.0"
+    - "BSD-3-Clause"
+    - "BSD-2-Clause"
+    - "ISC"
+  
+  blocked_licenses:
+    - "GPL-3.0"
+    - "AGPL-3.0"
+    - "Commercial"
+  
+  # Security policies  
+  security:
+    max_cvss_score: 7.0  # Block vulnerabilities above this CVSS score
+    require_human_approval_for_critical: true
+    auto_fix_low_severity: true
+    
+  # Package managers to monitor
+  package_managers:
+    - "npm"        # package.json
+    - "pip"        # requirements.txt, setup.py
+    - "maven"      # pom.xml
+    - "gradle"     # build.gradle
+    - "composer"   # composer.json
+    - "cargo"      # Cargo.toml
+    - "go"         # go.mod
+    - "nuget"      # *.csproj
+    
+# Scheduling Configuration
+scheduling:
+  scan_frequency: "daily"        # daily, weekly, monthly
+  report_frequency: "weekly"     # daily, weekly, monthly
+  update_check_time: "02:00"     # UTC time for automated scans
+
+# Notification Configuration  
+notifications:
+  slack:
+    enabled: true
+    channels:
+      security_alerts: "#security-alerts"
+      dependency_updates: "#dev-updates"
+      reports: "#dependency-reports"
+      
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    recipients:
+      - "devops@company.com"
+      - "security@company.com"
+
+# Reporting Configuration
+reporting:
+  google_sheets:
+    enabled: true
+    sheet_name: "Dependency Security Dashboard"
+    
+  notion:
+    enabled: false
+    page_title: "Dependency Health Report"
+    
+# Repository Configuration
+repositories:
+  # Repositories to monitor (can be updated via CLI/API)
+  monitored:
+    - owner: "Addy1947"
+      repo: "addyBites"
+      branch: "main"
+      
+  # Patterns to exclude from monitoring
+  exclude_patterns:
+    - "test/*"
+    - "docs/*" 
+    - "examples/*"

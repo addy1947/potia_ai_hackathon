@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  dependency-agent:
+    build: .
+    container_name: dependency-security-agent
+    environment:
+      # LLM Configuration (set one)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # GitHub Integration
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_USERNAME=${GITHUB_USERNAME}
+      
+      # Security Tools
+      - SEMGREP_API_TOKEN=${SEMGREP_API_TOKEN}
+      
+      # Notifications
+      - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+      - SLACK_CHANNEL=${SLACK_CHANNEL}
+      
+      # Reporting
+      - GOOGLE_SHEETS_CREDENTIALS_PATH=${GOOGLE_SHEETS_CREDENTIALS_PATH}
+      - GOOGLE_SHEETS_SPREADSHEET_ID=${GOOGLE_SHEETS_SPREADSHEET_ID}
+      - NOTION_API_KEY=${NOTION_API_KEY}
+      - NOTION_DATABASE_ID=${NOTION_DATABASE_ID}
+      
+    volumes:
+      # Mount config file
+      - ./config.yaml:/app/config.yaml:ro
+      
+      # Mount logs and reports
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+      
+      # Mount Google Sheets credentials if using
+      - ./credentials:/app/credentials:ro
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Run scheduled scans every hour
+    command: >
+      sh -c "
+        while true; do
+          echo 'Running scheduled dependency scan...'
+          python main.py scheduled-scan
+          echo 'Scan completed. Sleeping for 1 hour...'
+          sleep 3600
+        done
+      "
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "main.py", "test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a simple web dashboard (future enhancement)
+  # dashboard:
+  #   image: nginx:alpine
+  #   container_name: dependency-dashboard
+  #   ports:
+  #     - "8080:80"
+  #   volumes:
+  #     - ./dashboard:/usr/share/nginx/html:ro
+  #   depends_on:
+  #     - dependency-agent
+
+# Optional: Add persistent volumes
+volumes:
+  agent_logs:
+    driver: local
+  agent_reports:
+    driver: local
+
+# Optional: Add networks for isolation
+networks:
+  default:
+    name: dependency-agent-network
+    driver: bridge

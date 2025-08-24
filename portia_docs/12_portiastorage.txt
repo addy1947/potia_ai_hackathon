@@ -1,0 +1,1310 @@
+Title: portia.storage
+URL: https://docs.portialabs.ai/SDK/portia/storage
+Words: 3561
+============================================================
+
+On this page
+Storage classes for managing the saving and retrieval of plans, runs, and tool calls.
+This module defines a set of storage classes that provide different backends for saving, retrieving,
+and managing plans, runs, and tool calls. These storage classes include both in-memory and
+file-based storage, as well as integration with the Portia Cloud API. Each class is responsible
+for handling interactions with its respective storage medium, including validating responses
+and raising appropriate exceptions when necessary.
+Classes:
+Storage (Base Class): A base class that defines common interfaces for all storage types,
+ensuring consistent methods for saving and retrieving plans, runs, and tool calls.
+InMemoryStorage: An in-memory implementation of the
+Storage
+class for storing plans,
+runs, and tool calls in a temporary, volatile storage medium.
+FileStorage: A file-based implementation of the
+Storage
+class for storing plans, runs,
+and tool calls as local files in the filesystem.
+PortiaCloudStorage: A cloud-based implementation of the
+Storage
+class that interacts with
+the Portia Cloud API to save and retrieve plans, runs, and tool call records.
+Each storage class handles the following tasks:
+Sending and receiving data to its respective storage medium - memory, file system, or API.
+Validating responses from storage and raising errors when necessary.
+Handling exceptions and re-raising them as custom
+StorageError
+exceptions to provide
+more informative error handling.
+PlanStorage Objects
+class
+PlanStorage
+Abstract base class for storing and retrieving plans.
+Subclasses must implement the methods to save and retrieve plans.
+Methods
+save_plan(self, plan: Plan) -> None:
+Save a plan.
+get_plan(self, plan_id: PlanUUID) -> Plan:
+Get a plan by ID.
+plan_exists(self, plan_id: PlanUUID) -> bool:
+Check if a plan exists without raising an error.
+save_plan
+@abstractmethod
+save_plan
+plan
+Plan
+None
+Save a plan.
+Arguments
+plan
+Plan
+- The Plan object to save.
+Raises
+NotImplementedError
+- If the method is not implemented.
+get_plan
+@abstractmethod
+get_plan
+plan_id
+PlanUUID
+Plan
+Retrieve a plan by its ID.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to retrieve.
+Returns
+Plan
+- The Plan object associated with the provided plan_id.
+Raises
+NotImplementedError
+- If the method is not implemented.
+get_plan_by_query
+@abstractmethod
+get_plan_by_query
+query
+Plan
+Get a plan by query.
+Arguments
+query
+- The query to get a plan for.
+plan_exists
+@abstractmethod
+plan_exists
+plan_id
+PlanUUID
+bool
+Check if a plan exists without raising an error.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to check.
+Returns
+bool
+- True if the plan exists, False otherwise.
+Raises
+NotImplementedError
+- If the method is not implemented.
+get_similar_plans
+get_similar_plans
+query
+threshold
+float
+limit
+list
+Plan
+Get similar plans to the query.
+Arguments
+query
+- The query to get similar plans for.
+threshold
+float
+- The threshold for similarity.
+limit
+- The maximum number of plans to return.
+Returns
+list[Plan]
+- The list of similar plans.
+Raises
+NotImplementedError
+- If the method is not implemented.
+asave_plan
+async
+asave_plan
+plan
+Plan
+None
+Save a plan asynchronously using threaded execution.
+Arguments
+plan
+Plan
+- The Plan object to save.
+aget_plan
+async
+aget_plan
+plan_id
+PlanUUID
+Plan
+Retrieve a plan by its ID asynchronously using threaded execution.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to retrieve.
+Returns
+Plan
+- The Plan object associated with the provided plan_id.
+aget_plan_by_query
+async
+aget_plan_by_query
+query
+Plan
+Get a plan by query asynchronously using threaded execution.
+Arguments
+query
+- The query to get a plan for.
+aplan_exists
+async
+aplan_exists
+plan_id
+PlanUUID
+bool
+Check if a plan exists without raising an error asynchronously using threaded execution.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to check.
+Returns
+bool
+- True if the plan exists, False otherwise.
+aget_similar_plans
+async
+aget_similar_plans
+query
+threshold
+float
+limit
+list
+Plan
+Get similar plans to the query asynchronously using threaded execution.
+Arguments
+query
+- The query to get similar plans for.
+threshold
+float
+- The threshold for similarity.
+limit
+- The maximum number of plans to return.
+Returns
+list[Plan]
+- The list of similar plans.
+PlanRunListResponse Objects
+class
+PlanRunListResponse
+BaseModel
+Response for the get_plan_runs operation. Can support pagination.
+RunStorage Objects
+class
+RunStorage
+Abstract base class for storing and retrieving runs.
+Subclasses must implement the methods to save and retrieve PlanRuns.
+Methods
+save_plan_run(self, run: Run) -> None:
+Save a PlanRun.
+get_plan_run(self, plan_run_id: PlanRunUUID) -> PlanRun:
+Get PlanRun by ID.
+get_plan_runs(self, run_state: RunState | None = None, page=int | None = None)
+-> PlanRunListResponse:
+Return runs that match the given run_state
+save_plan_run
+@abstractmethod
+save_plan_run
+plan_run
+PlanRun
+None
+Save a PlanRun.
+Arguments
+plan_run
+PlanRun
+- The Run object to save.
+Raises
+NotImplementedError
+- If the method is not implemented.
+get_plan_run
+@abstractmethod
+get_plan_run
+plan_run_id
+PlanRunUUID
+PlanRun
+Retrieve PlanRun by its ID.
+Arguments
+plan_run_id
+RunUUID
+- The UUID of the run to retrieve.
+Returns
+- The Run object associated with the provided plan_run_id.
+Raises
+NotImplementedError
+- If the method is not implemented.
+get_plan_runs
+@abstractmethod
+get_plan_runs
+run_state
+PlanRunState
+None
+None
+page
+None
+None
+PlanRunListResponse
+List runs by their state.
+Arguments
+run_state
+RunState | None
+- Optionally filter runs by their state.
+page
+int | None
+- Optional pagination data
+Returns
+list[Run]
+- A list of Run objects that match the given state.
+Raises
+NotImplementedError
+- If the method is not implemented.
+asave_plan_run
+async
+asave_plan_run
+plan_run
+PlanRun
+None
+Save a PlanRun asynchronously using threaded execution.
+Arguments
+plan_run
+PlanRun
+- The Run object to save.
+aget_plan_run
+async
+aget_plan_run
+plan_run_id
+PlanRunUUID
+PlanRun
+Retrieve PlanRun by its ID asynchronously using threaded execution.
+Arguments
+plan_run_id
+RunUUID
+- The UUID of the run to retrieve.
+Returns
+- The Run object associated with the provided plan_run_id.
+aget_plan_runs
+async
+aget_plan_runs
+run_state
+PlanRunState
+None
+None
+page
+None
+None
+PlanRunListResponse
+List runs by their state asynchronously using threaded execution.
+Arguments
+run_state
+RunState | None
+- Optionally filter runs by their state.
+page
+int | None
+- Optional pagination data
+Returns
+list[Run]
+- A list of Run objects that match the given state.
+AdditionalStorage Objects
+class
+AdditionalStorage
+Abstract base class for additional storage.
+Subclasses must implement the methods.
+Methods
+save_tool_call(self, tool_call: ToolCallRecord) -> None:
+Save a tool_call.
+save_tool_call
+@abstractmethod
+save_tool_call
+tool_call
+ToolCallRecord
+None
+Save a ToolCall.
+Arguments
+tool_call
+ToolCallRecord
+- The ToolCallRecord object to save.
+Raises
+NotImplementedError
+- If the method is not implemented.
+save_end_user
+@abstractmethod
+save_end_user
+end_user
+EndUser
+EndUser
+Save an end user.
+Arguments
+end_user
+EndUser
+- The EndUser object to save.
+Raises
+NotImplementedError
+- If the method is not implemented.
+get_end_user
+@abstractmethod
+get_end_user
+external_id
+EndUser
+None
+Get an end user.
+Arguments
+external_id
+- The id of the end user to get.
+Raises
+NotImplementedError
+- If the method is not implemented.
+asave_tool_call
+async
+asave_tool_call
+tool_call
+ToolCallRecord
+None
+Save a tool_call asynchronously using threaded execution.
+Arguments
+tool_call
+ToolCallRecord
+- The ToolCallRecord object to save.
+asave_end_user
+async
+asave_end_user
+end_user
+EndUser
+EndUser
+Save an end user asynchronously using threaded execution.
+Arguments
+end_user
+EndUser
+- The EndUser object to save.
+aget_end_user
+async
+aget_end_user
+external_id
+EndUser
+None
+Get an end user asynchronously using threaded execution.
+Arguments
+external_id
+- The id of the end user to get.
+Storage Objects
+class
+Storage
+PlanStorage
+RunStorage
+AdditionalStorage
+Combined base class for Plan Run + Additional storages.
+AgentMemory Objects
+class
+AgentMemory
+Abstract base class for storing items in agent memory.
+save_plan_run_output
+@abstractmethod
+save_plan_run_output
+output_name
+output
+Output
+plan_run_id
+PlanRunUUID
+Output
+Save an output from a plan run to agent memory.
+Arguments
+output_name
+- The name of the output within the plan
+output
+Output
+- The Output object to save
+plan_run_id
+PlanRunUUID
+- The ID of the current plan run
+Returns
+Output
+- The Output object with value marked as stored in agent memory.
+Raises
+NotImplementedError
+- If the method is not implemented.
+get_plan_run_output
+@abstractmethod
+get_plan_run_output
+output_name
+plan_run_id
+PlanRunUUID
+LocalDataValue
+Retrieve an Output from agent memory.
+Arguments
+output_name
+- The name of the output to retrieve
+plan_run_id
+PlanRunUUID
+- The ID of the plan run
+Returns
+Output
+- The retrieved Output object with value filled in from agent memory.
+Raises
+NotImplementedError
+- If the method is not implemented.
+asave_plan_run_output
+async
+asave_plan_run_output
+output_name
+output
+Output
+plan_run_id
+PlanRunUUID
+Output
+Save an output from a plan run to agent memory asynchronously using threaded execution.
+Arguments
+output_name
+- The name of the output within the plan
+output
+Output
+- The Output object to save
+plan_run_id
+PlanRunUUID
+- The ID of the current plan run
+Returns
+Output
+- The Output object with value marked as stored in agent memory.
+aget_plan_run_output
+async
+aget_plan_run_output
+output_name
+plan_run_id
+PlanRunUUID
+LocalDataValue
+Retrieve an Output from agent memory asynchronously using threaded execution.
+Arguments
+output_name
+- The name of the output to retrieve
+plan_run_id
+PlanRunUUID
+- The ID of the plan run
+Returns
+Output
+- The retrieved Output object with value filled in from agent memory.
+log_tool_call
+log_tool_call
+tool_call
+ToolCallRecord
+None
+Log the tool call.
+Arguments
+tool_call
+ToolCallRecord
+- The ToolCallRecord object to log.
+InMemoryStorage Objects
+class
+InMemoryStorage
+PlanStorage
+RunStorage
+AdditionalStorage
+AgentMemory
+Simple storage class that keeps plans + runs in memory.
+Tool Calls are logged via the LogAdditionalStorage.
+__init__
+__init__
+None
+Initialize Storage.
+save_plan
+save_plan
+plan
+Plan
+None
+Add plan to dict.
+Arguments
+plan
+Plan
+- The Plan object to save.
+get_plan
+get_plan
+plan_id
+PlanUUID
+Plan
+Get plan from dict.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to retrieve.
+Returns
+Plan
+- The Plan object associated with the provided plan_id.
+Raises
+PlanNotFoundError
+- If the plan is not found.
+get_plan_by_query
+get_plan_by_query
+query
+Plan
+Get a plan by query.
+Arguments
+query
+- The query to get a plan for.
+plan_exists
+plan_exists
+plan_id
+PlanUUID
+bool
+Check if a plan exists in memory.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to check.
+Returns
+bool
+- True if the plan exists, False otherwise.
+save_plan_run
+save_plan_run
+plan_run
+PlanRun
+None
+Add run to dict.
+Arguments
+plan_run
+PlanRun
+- The Run object to save.
+get_plan_run
+get_plan_run
+plan_run_id
+PlanRunUUID
+PlanRun
+Get run from dict.
+Arguments
+plan_run_id
+PlanRunUUID
+- The UUID of the PlanRun to retrieve.
+Returns
+PlanRun
+- The PlanRun object associated with the provided plan_run_id.
+Raises
+PlanRunNotFoundError
+- If the PlanRun is not found.
+get_plan_runs
+get_plan_runs
+run_state
+PlanRunState
+None
+None
+page
+None
+None
+PlanRunListResponse
+Get run from dict.
+Arguments
+run_state
+RunState | None
+- Optionally filter runs by their state.
+page
+int | None
+- Optional pagination data which is not used for in memory storage.
+Returns
+list[Run]
+- A list of Run objects that match the given state.
+save_plan_run_output
+save_plan_run_output
+output_name
+output
+Output
+plan_run_id
+PlanRunUUID
+Output
+Save Output from a plan run to memory.
+Arguments
+output_name
+- The name of the output within the plan
+output
+Output
+- The Output object to save
+plan_run_id
+PlanRunUUID
+- The ID of the current plan run
+get_plan_run_output
+get_plan_run_output
+output_name
+plan_run_id
+PlanRunUUID
+LocalDataValue
+Retrieve an Output from memory.
+Arguments
+output_name
+- The name of the output to retrieve
+plan_run_id
+PlanRunUUID
+- The ID of the plan run
+Returns
+Output
+- The retrieved Output object
+Raises
+KeyError
+- If the output is not found
+save_tool_call
+save_tool_call
+tool_call
+ToolCallRecord
+None
+Log the tool call.
+save_end_user
+save_end_user
+end_user
+EndUser
+EndUser
+Add end_user to dict.
+Arguments
+end_user
+EndUser
+- The EndUser object to save.
+get_end_user
+get_end_user
+external_id
+EndUser
+None
+Get end_user from dict or init a new one.
+Arguments
+external_id
+- The id of the end user object to get.
+DiskFileStorage Objects
+class
+DiskFileStorage
+PlanStorage
+RunStorage
+AdditionalStorage
+AgentMemory
+Disk-based implementation of the Storage interface.
+Stores serialized Plan and Run objects as JSON files on disk.
+__init__
+__init__
+storage_dir
+None
+None
+Set storage dir.
+Arguments
+storage_dir
+str | None
+- Optional directory for storing files.
+save_plan
+save_plan
+plan
+Plan
+None
+Save a Plan object to the storage.
+Arguments
+plan
+Plan
+- The Plan object to save.
+get_plan
+get_plan
+plan_id
+PlanUUID
+Plan
+Retrieve a Plan object by its ID.
+Arguments
+plan_id
+PlanUUID
+- The ID of the Plan to retrieve.
+Returns
+Plan
+- The retrieved Plan object.
+Raises
+PlanNotFoundError
+- If the Plan is not found or validation fails.
+get_plan_by_query
+get_plan_by_query
+query
+Plan
+Get a plan by query.
+This method will return the first plan that matches the query. This is not always the most
+recent plan.
+Arguments
+query
+- The query to get a plan for.
+plan_exists
+plan_exists
+plan_id
+PlanUUID
+bool
+Check if a plan exists on disk.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to check.
+Returns
+bool
+- True if the plan exists, False otherwise.
+save_plan_run
+save_plan_run
+plan_run
+PlanRun
+None
+Save PlanRun object to the storage.
+Arguments
+plan_run
+PlanRun
+- The Run object to save.
+get_plan_run
+get_plan_run
+plan_run_id
+PlanRunUUID
+PlanRun
+Retrieve PlanRun object by its ID.
+Arguments
+plan_run_id
+RunUUID
+- The ID of the Run to retrieve.
+Returns
+- The retrieved Run object.
+Raises
+RunNotFoundError
+- If the Run is not found or validation fails.
+get_plan_runs
+get_plan_runs
+run_state
+PlanRunState
+None
+None
+page
+None
+None
+PlanRunListResponse
+Find all plan runs in storage that match state.
+Arguments
+run_state
+RunState | None
+- Optionally filter runs by their state.
+page
+int | None
+- Optional pagination data which is not used for in memory storage.
+Returns
+list[Run]
+- A list of Run objects that match the given state.
+save_plan_run_output
+save_plan_run_output
+output_name
+output
+Output
+plan_run_id
+PlanRunUUID
+Output
+Save Output from a plan run to agent memory on disk.
+Arguments
+output_name
+- The name of the output within the plan
+output
+Output
+- The Output object to save
+plan_run_id
+PlanRunUUID
+- The ID of the current plan run
+get_plan_run_output
+get_plan_run_output
+output_name
+plan_run_id
+PlanRunUUID
+LocalDataValue
+Retrieve an Output from agent memory on disk.
+Arguments
+output_name
+- The name of the output to retrieve
+plan_run_id
+PlanRunUUID
+- The ID of the plan run
+Returns
+Output
+- The retrieved Output object
+Raises
+FileNotFoundError
+- If the output file is not found
+ValidationError
+- If the deserialization fails
+save_tool_call
+save_tool_call
+tool_call
+ToolCallRecord
+None
+Log the tool call.
+save_end_user
+save_end_user
+end_user
+EndUser
+EndUser
+Write end_user to dict.
+Arguments
+end_user
+EndUser
+- The EndUser object to save.
+get_end_user
+get_end_user
+external_id
+EndUser
+None
+Get end_user from dict or init a new one.
+Arguments
+external_id
+- The id of the end user object to get.
+PortiaCloudStorage Objects
+class
+PortiaCloudStorage
+Storage
+AgentMemory
+Save plans, runs and tool calls to portia cloud.
+__init__
+__init__
+config
+Config
+cache_dir
+None
+None
+max_cache_size
+DEFAULT_MAX_CACHE_SIZE
+None
+Initialize the PortiaCloudStorage instance.
+Arguments
+config
+Config
+- The configuration containing API details for Portia Cloud.
+cache_dir
+str | None
+- Optional directory for local caching of outputs.
+max_cache_size
+- The maximum number of files to cache locally.
+check_response
+check_response
+response
+httpx
+Response
+None
+Validate the response from Portia API.
+Arguments
+response
+httpx.Response
+- The response from the Portia API to check.
+Raises
+StorageError
+- If the response from the Portia API indicates an error.
+save_plan
+save_plan
+plan
+Plan
+None
+Save a plan to Portia Cloud.
+Arguments
+plan
+Plan
+- The Plan object to save to the cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+asave_plan
+async
+asave_plan
+plan
+Plan
+None
+Save a plan to Portia Cloud.
+Arguments
+plan
+Plan
+- The Plan object to save to the cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+get_plan
+get_plan
+plan_id
+PlanUUID
+Plan
+Retrieve a plan from Portia Cloud.
+Arguments
+plan_id
+PlanUUID
+- The ID of the plan to retrieve.
+Returns
+Plan
+- The Plan object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the plan does not exist.
+aget_plan
+async
+aget_plan
+plan_id
+PlanUUID
+Plan
+Retrieve a plan from Portia Cloud.
+Arguments
+plan_id
+PlanUUID
+- The ID of the plan to retrieve.
+Returns
+Plan
+- The Plan object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the plan does not exist.
+get_plan_by_query
+get_plan_by_query
+query
+Plan
+Get a plan by query.
+Arguments
+query
+- The query to get a plan for.
+aget_plan_by_query
+async
+aget_plan_by_query
+query
+Plan
+Get a plan by query asynchronously using threaded execution.
+Arguments
+query
+- The query to get a plan for.
+plan_exists
+plan_exists
+plan_id
+PlanUUID
+bool
+Check if a plan exists in Portia Cloud.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to check.
+Returns
+bool
+- True if the plan exists, False otherwise.
+aplan_exists
+async
+aplan_exists
+plan_id
+PlanUUID
+bool
+Check if a plan exists in Portia Cloud.
+Arguments
+plan_id
+PlanUUID
+- The UUID of the plan to check.
+Returns
+bool
+- True if the plan exists, False otherwise.
+save_plan_run
+save_plan_run
+plan_run
+PlanRun
+None
+Save PlanRun to Portia Cloud.
+Arguments
+plan_run
+PlanRun
+- The Run object to save to the cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+asave_plan_run
+async
+asave_plan_run
+plan_run
+PlanRun
+None
+Save PlanRun to Portia Cloud.
+Arguments
+plan_run
+PlanRun
+- The Run object to save to the cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+get_plan_run
+get_plan_run
+plan_run_id
+PlanRunUUID
+PlanRun
+Retrieve PlanRun from Portia Cloud.
+Arguments
+plan_run_id
+RunUUID
+- The ID of the run to retrieve.
+Returns
+- The Run object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the run does not exist.
+aget_plan_run
+async
+aget_plan_run
+plan_run_id
+PlanRunUUID
+PlanRun
+Retrieve PlanRun from Portia Cloud.
+Arguments
+plan_run_id
+RunUUID
+- The ID of the run to retrieve.
+Returns
+- The Run object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the run does not exist.
+get_plan_runs
+get_plan_runs
+run_state
+PlanRunState
+None
+None
+page
+None
+None
+PlanRunListResponse
+Find all runs in storage that match state.
+Arguments
+run_state
+RunState | None
+- Optionally filter runs by their state.
+page
+int | None
+- Optional pagination data which is not used for in memory storage.
+Returns
+list[Run]
+- A list of Run objects retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+aget_plan_runs
+async
+aget_plan_runs
+run_state
+PlanRunState
+None
+None
+page
+None
+None
+PlanRunListResponse
+Find all runs in storage that match state.
+Arguments
+run_state
+RunState | None
+- Optionally filter runs by their state.
+page
+int | None
+- Optional pagination data which is not used for in memory storage.
+Returns
+list[Run]
+- A list of Run objects retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+save_tool_call
+save_tool_call
+tool_call
+ToolCallRecord
+None
+Save a tool call to Portia Cloud.
+This method attempts to save the tool call to Portia Cloud but will not raise exceptions
+if the request fails. Instead, it logs the error and continues execution.
+Arguments
+tool_call
+ToolCallRecord
+- The ToolCallRecord object to save to the cloud.
+asave_tool_call
+async
+asave_tool_call
+tool_call
+ToolCallRecord
+None
+Save a tool call to Portia Cloud.
+This method attempts to save the tool call to Portia Cloud but will not raise exceptions
+if the request fails. Instead, it logs the error and continues execution.
+Arguments
+tool_call
+ToolCallRecord
+- The ToolCallRecord object to save to the cloud.
+save_plan_run_output
+save_plan_run_output
+output_name
+output
+Output
+plan_run_id
+PlanRunUUID
+Output
+Save Output from a plan run to Portia Cloud.
+Arguments
+output_name
+- The name of the output within the plan
+output
+Output
+- The Output object to save
+plan_run_id
+PlanRun
+- The if of the current plan run
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+asave_plan_run_output
+async
+asave_plan_run_output
+output_name
+output
+Output
+plan_run_id
+PlanRunUUID
+Output
+Save Output from a plan run to Portia Cloud.
+Arguments
+output_name
+- The name of the output within the plan
+output
+Output
+- The Output object to save
+plan_run_id
+PlanRun
+- The if of the current plan run
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+get_plan_run_output
+get_plan_run_output
+output_name
+plan_run_id
+PlanRunUUID
+LocalDataValue
+Retrieve an Output from Portia Cloud.
+Arguments
+output_name
+- The name of the output to get from memory
+plan_run_id
+RunUUID
+- The ID of the run to retrieve.
+Returns
+- The Run object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the run does not exist.
+aget_plan_run_output
+async
+aget_plan_run_output
+output_name
+plan_run_id
+PlanRunUUID
+LocalDataValue
+Retrieve an Output from Portia Cloud.
+Arguments
+output_name
+- The name of the output to get from memory
+plan_run_id
+RunUUID
+- The ID of the run to retrieve.
+Returns
+- The Run object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the run does not exist.
+get_similar_plans
+get_similar_plans
+query
+threshold
+float
+limit
+list
+Plan
+Get similar plans to the query.
+Arguments
+query
+- The query to get similar plans for.
+threshold
+float
+- The threshold for similarity.
+limit
+- The maximum number of plans to return.
+Returns
+list[Plan]
+- The list of similar plans.
+aget_similar_plans
+async
+aget_similar_plans
+query
+threshold
+float
+limit
+list
+Plan
+Get similar plans to the query.
+Arguments
+query
+- The query to get similar plans for.
+threshold
+float
+- The threshold for similarity.
+limit
+- The maximum number of plans to return.
+Returns
+list[Plan]
+- The list of similar plans.
+save_end_user
+save_end_user
+end_user
+EndUser
+EndUser
+Save an end_user to Portia Cloud.
+Arguments
+end_user
+EndUser
+- The EndUser object to save to the cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+asave_end_user
+async
+asave_end_user
+end_user
+EndUser
+EndUser
+Save an end_user to Portia Cloud.
+Arguments
+end_user
+EndUser
+- The EndUser object to save to the cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails.
+get_end_user
+get_end_user
+external_id
+EndUser
+Retrieve an end user from Portia Cloud.
+Arguments
+external_id
+- The ID of the end user to retrieve.
+Returns
+EndUser
+- The EndUser object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the plan does not exist.
+aget_end_user
+async
+aget_end_user
+external_id
+EndUser
+None
+Retrieve an end user from Portia Cloud.
+Arguments
+external_id
+- The ID of the end user to retrieve.
+Returns
+EndUser
+- The EndUser object retrieved from Portia Cloud.
+Raises
+StorageError
+- If the request to Portia Cloud fails or the plan does not exist.
+PlanStorage Objects
+PlanRunListResponse Objects
+RunStorage Objects
+AdditionalStorage Objects
+Storage Objects
+AgentMemory Objects
+InMemoryStorage Objects
+DiskFileStorage Objects
+PortiaCloudStorage Objects
